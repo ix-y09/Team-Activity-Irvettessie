@@ -1,0 +1,142 @@
+---
+title: "afternoon"
+author: "essie"
+date: "2025-12-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+df_clean <- df
+df_clean[df_clean == ""] <- NA
+df_clean$Belief <- as.character(df_clean$Belief)
+
+df_clean$Belief[df_clean$Belief %in% c("Y", "Yes")] <- "Yes"
+df_clean$Belief[df_clean$Belief %in% c("N", "No")]  <- "No"
+
+# 
+df_clean$Belief[!df_clean$Belief %in% c("Yes", "No")] <- NA
+
+df_clean$Belief <- factor(df_clean$Belief, levels = c("No", "Yes"))
+for (v in c("PH", "MH")) {
+  df_clean[[v]] <- as.character(df_clean[[v]])
+  df_clean[[v]][df_clean[[v]] %in% c("Y", "Yes")] <- "Yes"
+  df_clean[[v]][df_clean[[v]] %in% c("N", "No")]  <- "No"
+  df_clean[[v]][!df_clean[[v]] %in% c("Yes", "No")] <- NA
+  df_clean[[v]] <- factor(df_clean[[v]], levels = c("No", "Yes"))
+}
+df_clean$Gender <- as.character(df_clean$Gender)
+
+df_clean$Gender[df_clean$Gender == "M"]    <- "Male"
+df_clean$Gender[df_clean$Gender == "F"]    <- "Female"
+df_clean$Gender[df_clean$Gender == "GD"]   <- "Gender diverse"
+df_clean$Gender[df_clean$Gender == "PNTS"] <- "Prefer not to say"
+
+df_clean$Gender <- factor(
+  df_clean$Gender,
+  levels = c("Male", "Female", "Gender diverse", "Prefer not to say")
+)
+df_clean$Smoker <- as.character(df_clean$Smoker)
+
+df_clean$Smoker[df_clean$Smoker %in% c("Y", "Yes", "Current")] <- "Yes"
+df_clean$Smoker[df_clean$Smoker %in% c("N", "No")] <- "No"
+
+df_clean$Smoker[!df_clean$Smoker %in% c("Yes", "No")] <- NA
+
+df_clean$Smoker <- factor(df_clean$Smoker, levels = c("No", "Yes"))
+df_clean$Age[df_clean$Age == 0] <- NA
+df_clean$SES5 <- factor(
+  df_clean$SES5,
+  levels = c("L1", "L2", "L3", "L4", "L5"),
+  ordered = TRUE
+)
+str(df_clean)
+summary(df_clean)
+
+table(df_clean$Belief, useNA = "ifany")
+table(df_clean$PH, useNA = "ifany")
+table(df_clean$MH, useNA = "ifany")
+table(df_clean$Gender, useNA = "ifany")
+
+```
+
+```{r}
+model_primary <- glm(
+  Belief ~ PH + MH,
+  data = df_clean,
+  family = binomial
+)
+
+summary(model_primary)
+
+```
+
+
+```{r}
+prop.table(table(df_clean$PH))
+prop.table(table(df_clean$MH))
+
+```
+
+22.2% of participants reported a physical health issue, and 31.8% reported a mental health issue.
+
+
+```{r}
+#Q2
+model_PH <- glm(
+  PH ~ Age + Gender + SES5 + Smoker,
+  data = df_clean,
+  family = binomial
+)
+
+summary(model_PH)
+
+
+model_MH <- glm(
+  MH ~ Age + Gender + SES5 + Smoker,
+  data = df_clean,
+  family = binomial
+)
+
+summary(model_MH)
+
+# after rejust  prevalence
+mean(predict(model_PH, type = "response"), na.rm = TRUE)
+mean(predict(model_MH, type = "response"), na.rm = TRUE)
+
+
+```
+```{r}
+#Q3
+summary(df_clean$Age)
+prop.table(table(df_clean$Gender))
+prop.table(table(df_clean$SES5))
+prop.table(table(df_clean$PH))
+prop.table(table(df_clean$MH))
+prop.table(table(df_clean$Smoker))
+
+```
+
