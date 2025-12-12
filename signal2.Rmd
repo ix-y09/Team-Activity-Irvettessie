@@ -93,7 +93,9 @@ model_primary <- glm(
 summary(model_primary)
 
 ```
-
+A binomial logistic regression was conducted to examine whether physical or mental health issues were associated with the belief that one’s condition would worsen while waiting for treatment.
+Physical health issues were not significantly associated with this belief (β = 0.18, SE = 0.44, p = 0.69). Similarly, mental health issues were not significantly associated with believing that the condition would worsen (β = −0.47, SE = 0.40, p = 0.24).
+Overall, the model showed no evidence that the presence of physical or mental health issues influenced beliefs about worsening health while waiting for treatment.
 
 ```{r}
 prop.table(table(df_clean$PH))
@@ -129,6 +131,9 @@ mean(predict(model_MH, type = "response"), na.rm = TRUE)
 
 
 ```
+A binomial logistic regression was conducted to assess the prevalence of physical health issues in the cohort, adjusting for age, gender, socioeconomic status (SES5), and smoking status.
+Age was not significantly associated with the presence of physical health issues (β = 0.01, p = 0.75). There were also no significant differences in physical health issues by gender, including female, gender diverse, or prefer not to say categories (all p > 0.05).
+
 ```{r}
 #Q3
 summary(df_clean$Age)
@@ -139,4 +144,7 @@ prop.table(table(df_clean$MH))
 prop.table(table(df_clean$Smoker))
 
 ```
-
+#predominantly middle-aged sample
+#Gender distribution was relatively balanced
+#This indicates reasonable representation across socioeconomic groups, although slight variation between quintiles was observed.
+#Regarding health characteristics, 22.2% of participants reported having a physical health issue, while 31.8% reported a mental health issue. In contrast, a high proportion of participants reported current smoking (85.8%), suggesting that smokers may be over-represented in the sample.
