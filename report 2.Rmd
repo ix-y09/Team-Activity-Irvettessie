@@ -133,3 +133,11 @@ prop.table(table(df_clean$Smoker))
 #Gender distribution was relatively balanced
 #This indicates reasonable representation across socioeconomic groups, although slight variation between quintiles was observed.
 #Regarding health characteristics, 22.2% of participants reported having a physical health issue, while 31.8% reported a mental health issue. In contrast, a high proportion of participants reported current smoking (85.8%), suggesting that smokers may be over-represented in the sample.
+
+
+
+```{r}
+getwd()
+
+```
+
